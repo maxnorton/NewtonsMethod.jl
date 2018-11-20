@@ -19,4 +19,6 @@ function newtonroot(f, x₀; tol=1E-7, maxiter=1000)
     newtonroot(f, f′, x₀)
 end
 
+export newtonroot
+
 end # module
