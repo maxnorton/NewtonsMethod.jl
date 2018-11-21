@@ -12,7 +12,7 @@ function newtonroot(f, f′, x₀; tol=1E-7, maxiter=1000)
         x_old = x_new
         iter += 1
     end
-    return (x_new, normdiff, iter)
+    normdiff > tol ? return nothing : return (x_new, normdiff, iter)
 end
 
 function newtonroot(f, x₀; tol=1E-7, maxiter=1000)
