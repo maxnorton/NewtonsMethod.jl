@@ -8,7 +8,7 @@ function newtonroot(f, f′, x₀; tol=1E-7, maxiter=1000)
     iter = 1
     while normdiff > tol && iter <= maxiter
         x_new = x_old - f(x_old)/f′(x_old)
-        normdiff = x_new - x_old
+        normdiff = norm(x_new - x_old)
         x_old = x_new
         iter += 1
     end
