@@ -20,9 +20,9 @@ end
 
 @testset "Autodiff known fns" begin
     @test norm(newtonroot(f, x)[1]) < tol
-    @test norm(newtonroot(g, x)[1] - 4) < tol
-    @test norm(newtonroot(h, x1)[1] - 4) < tol
-    @test norm(newtonroot(h, x2)[1] + 3) < tol
+    @test norm(newtonroot(g, x)[1] - 4.0) < tol
+    @test norm(newtonroot(h, x1)[1] - 4.0) < tol
+    @test norm(newtonroot(h, x2)[1] + 3.0) < tol
     @test newtonroot(n, x)[1]==nothing # redundant?
 end
 
@@ -30,18 +30,27 @@ end
     x = one(BigFloat)
     #should be a better way to avoid the duplication below
     @test norm(newtonroot(f, fp, x)[1]) < tol
-    @test norm(newtonroot(g, gp, x)[1] - 4) < tol
-    @test norm(newtonroot(h, hp, x1)[1] - 4) < tol
-    @test norm(newtonroot(h, hp, x2)[1] + 3) < tol
+    @test norm(newtonroot(g, gp, x)[1] - 4.0) < tol
+    @test norm(newtonroot(h, hp, x1)[1] - 4.0) < tol
+    @test norm(newtonroot(h, hp, x2)[1] + 3.0) < tol
     @test newtonroot(n, np, x)[1]==nothing
     @test norm(newtonroot(f, x)[1]) < tol
-    @test norm(newtonroot(g, x)[1] - 4) < tol
-    @test norm(newtonroot(h, x1)[1] - 4) < tol
-    @test norm(newtonroot(h, x2)[1] + 3) < tol
+    @test norm(newtonroot(g, x)[1] - 4.0) < tol
+    @test norm(newtonroot(h, x1)[1] - 4.0) < tol
+    @test norm(newtonroot(h, x2)[1] + 3.0) < tol
     @test newtonroot(n, x)[1]==nothing
 end
 
-@testset "Maxiter" begin
+@testset "Maxiter & tol" begin
     @test newtonroot(h, hp, x1, maxiter=5)[1]==nothing
     @test newtonroot(h, x1, maxiter=5)[1]==nothing
+    @test newtonroot(h, hp, x1, tol=0.0)[1] == 4.0 # OK to set tol as exactly 0 when
+                                            # newton's method solves exactly
+    @test newtonroot(h, x1, tol=0.0)[1] == 4.0
+    @test newtonroot(f, fp, one(BigFloat), tol=0.0)[1] == nothing # NM cannot solve for
+                                                # exact root, so setting tol
+                                                # to zero returns nothing when
+                                                # x is measured at arbitrary
+                                                # precision
+    @test newtonroot(f, one(BigFloat), tol=0.0)[1] == nothing
 end
