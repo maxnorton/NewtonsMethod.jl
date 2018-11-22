@@ -40,3 +40,8 @@ end
     @test norm(newtonroot(h, x2)[1] + 3) < tol
     @test newtonroot(n, x)[1]==nothing
 end
+
+@testset "Maxiter" begin
+    @test newtonroot(h, hp, x1, maxiter=5)[1]==nothing
+    @test newtonroot(h, x1, maxiter=5)[1]==nothing
+end

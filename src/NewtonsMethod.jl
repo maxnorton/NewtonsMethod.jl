@@ -19,7 +19,7 @@ end
 function newtonroot(f, x₀; tol=1E-7, maxiter=1000)
     Diff(f) = x -> ForwardDiff.derivative(f, x)
     f′ = Diff(f)
-    newtonroot(f, f′, x₀)
+    newtonroot(f, f′, x₀, tol=tol, maxiter=maxiter)
 end
 
 export newtonroot
