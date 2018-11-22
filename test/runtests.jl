@@ -5,7 +5,7 @@ f(x)=-x^2; fp(x)=-2x
 g(x)=2(x-4)^3; gp(x) = 6(x-4)^2
 h(x)=x^3-2x^2-11x+12; hp(x)=3x^2-4x-11
 n(x)=x^2+42.0; np(x)=2x
-x=1.0; x1=2.35287527; x2=2.35284172
+x=1.0; x1=2.35287527; x2=2.35284172; 
 tol=1E-6 # use manual tolerance for known-function tests
 
 @testset "Fns with known roots" begin
@@ -42,15 +42,15 @@ end
 end
 
 @testset "Maxiter & tol" begin
+    # expected nonconvergence behavior for complicated function and small maxiter
     @test newtonroot(h, hp, x1, maxiter=5)[1]==nothing
     @test newtonroot(h, x1, maxiter=5)[1]==nothing
-    @test newtonroot(h, hp, x1, tol=0.0)[1] == 4.0 # OK to set tol as exactly 0 when
-                                            # newton's method solves exactly
+    # OK to set tol as exactly 0 when NM yields exact root
+    @test newtonroot(h, hp, x1, tol=0.0)[1] == 4.0
     @test newtonroot(h, x1, tol=0.0)[1] == 4.0
-    @test newtonroot(f, fp, one(BigFloat), tol=0.0)[1] == nothing # NM cannot solve for
-                                                # exact root, so setting tol
-                                                # to zero returns nothing when
-                                                # x is measured at arbitrary
-                                                # precision
+    # NM cannot get exact root, so tol=0 returns nothing when x has arbitrary precision
+    @test newtonroot(f, fp, one(BigFloat), tol=0.0)[1] == nothing
     @test newtonroot(f, one(BigFloat), tol=0.0)[1] == nothing
+    # when tol is nonzero, tol' > tol yields less precise estimate
+    @test norm(newtonroot(f, fp, x, tol=1E-4)[1] - 0) > norm(newtonroot(f, fp, x, tol=1E-5)[1] - 0)
 end
