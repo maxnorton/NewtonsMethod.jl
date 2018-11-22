@@ -4,6 +4,7 @@ using LinearAlgebra, Statistics, Compat, ForwardDiff
 
 function newtonroot(f, f′, x₀; tol=1E-7, maxiter=1000)
     x_old = x₀
+    x_new = x_old
     normdiff = Inf
     iter = 1
     while normdiff > tol && iter <= maxiter
@@ -12,7 +13,7 @@ function newtonroot(f, f′, x₀; tol=1E-7, maxiter=1000)
         x_old = x_new
         iter += 1
     end
-    normdiff > tol ? return nothing : return (x_new, normdiff, iter)
+    normdiff > tol ? (nothing, normdiff, iter) : (x_new, normdiff, iter)
 end
 
 function newtonroot(f, x₀; tol=1E-7, maxiter=1000)
@@ -23,4 +24,4 @@ end
 
 export newtonroot
 
-end # module
+end
