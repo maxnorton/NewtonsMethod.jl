@@ -25,10 +25,11 @@ for x in [x₀, xb₀]
         @test norm(newtonroot(h, x1)[1] - 4.0) < tol
         @test norm(newtonroot(h, x2)[1] + 3.0) < tol
         @test newtonroot(n, x)[1]==nothing # redundant?
+        @test newtonroot(n, x)==newtonroot(n, np, x) # test of f′=Diff(f)
     end
 end
 
-@testset "Maxiter & tol" begin
+@testset "Maxiter, iter, tol" begin
     # expected nonconvergence behavior for complicated function and small maxiter
     @test newtonroot(h, hp, x1, maxiter=5)[1]==nothing
     @test newtonroot(h, x1, maxiter=5)[1]==nothing
@@ -40,4 +41,7 @@ end
     @test newtonroot(f, one(BigFloat), tol=0.0)[1] == nothing
     # when tol is nonzero, tol' > tol yields less precise estimate
     @test norm(newtonroot(f, fp, x₀, tol=1E-4)[1] - 0) > norm(newtonroot(f, fp, x₀, tol=1E-5)[1] - 0)
+    # tests for iter. nonideal logic, i think.
+    @test newtonroot(h, hp, x1, maxiter=0)[3]==1
+    @test newtonroot(h, hp, x1, tol=Inf)[3]==1
 end
